@@ -47,7 +47,6 @@ $$
 
 A novelty element of node $n$ is $w = (h, f, t)$
 
-
 where:
 - $ h $ is the tuple of heuristic values of $n$ ($h_1, \dots, h_m$),
 - $ f $ is a fact such that $ f \in s $, and
@@ -69,68 +68,72 @@ Implemented different novelty methods considering different heuristic values.
 1. **lmcount:**  
    - **Heuristic:** Uses the landmark count computed from bottom-up landmarks, denoted as $h_{lm}(n)$.  
    - **Evaluation Function:** $f(n) = h_{lm}(n)$.  
-   - **Remarks:** Serves as a baseline to assess the effect of adding a novelty component.
+   - **Remarks:** Serves as a baseline.
 
 2. **TDG-satis:**  
    - **Heuristic:** Uses the Task Decomposition Graph (TDG) heuristic with a satisficing approach, denoted as $h_{TDG}(n)$.  
    - **Evaluation Function:** $f(n) = h_{TDG}(n)$.  
-   - **Remarks:** Provides another baseline for comparison, focusing solely on TDG-satis.
+   - **Remarks:** Serves as a baseline.
 
 3. **lmcount-tdg:**  
    - **Heuristic:** Combines the landmark count and TDG-satis, i.e., $h(n) = (h_{lm}(n), h_{TDG}(n))$, without incorporating novelty.  
-   - **Evaluation Function:** $f(n)$ is derived from the lexicographic ordering of $h_{lm}(n)$ and $h_{TDG}(n)$, i.e., $f(n) = (h_{lm}(n), h_{TDG}(n))$.  
-   - **Remarks:** Provides a baseline to isolate the impact of novelty when added to the combined heuristic.
+   - **Evaluation Function:** $f(n) = (h_{lm}(n), h_{TDG}(n))$.  
+   - **Remarks:** Serves as a baseline for combined heuristics.
 
 4. **Novelty-lm-f-t:**  
-   - **Heuristic Component ($h$):** $h_{lm}(n)$ from the landmark count.  
-   - **Novelty Computation:** Computes the novelty element as  
-     $$w(n) = (h_{lm}(n), f, t),$$  
-     where $f \in s$ and $t$ is the selected task (i.e., $index(t, TN) = 0$).  
-   - **Evaluation Function:** $f(n) = (w(n), h_{lm}(n))$, meaning the node is evaluated first by its novelty and then by the landmark count.  
-   - **Remarks:** Assesses if adding novelty improves performance over the baseline using only the landmark count.
+   - **Heuristic Component ($h$):** landmark count $h_{lm}(n)$ .  
+   - **Novelty Computation:** Novelty element $w(n) = (h_{lm}(n), f, t)$.
+   - **Evaluation Function:** $f(n) = (w(n), h_{lm}(n))$.  
+   - **Remarks:** Assesses if adding novelty improves performance over the baseline.
 
 5. **Novelty-lm-tdg-f-t:**  
-   - **Heuristic Component ($h$):** A composite heuristic defined as $h(n) = (h_{lm}(n), h_{TDG}(n))$, combining both landmark count and TDG-satis.  
-   - **Novelty Computation:** Computes the novelty element as  
-     $$w(n) = (h(n), f, t).$$  
-   - **Evaluation Function:** $f(n) = (w(n), h(n))$, where nodes are primarily ranked by their novelty measure and secondarily by the composite heuristic.  
-   - **Remarks:** Evaluates if integrating novelty into a combined heuristic (landmark count and TDG-satis) improves planning performance over the combined baseline.
+   - **Heuristic Component ($h$):** landmark count and TDG $(h_{lm}(n), h_{TDG}(n))$.  
+   - **Novelty Computation:** novelty element $w(n) = (h(n), f, t)$  
+   - **Evaluation Function:** $f(n) = (w(n), h_{lm}(n), h_{tdg}(n))$.  
+   - **Remarks:** Assesses if adding novelty improves performance over the baseline.
 
 6. **Novelty-tdg-f-t:**  
-   - **Heuristic Component ($h$):** Uses the TDG-satis heuristic, denoted as $h_{TDG}(n)$.  
-   - **Novelty Computation:** Computes the novelty element as  
-     $$w(n) = (h_{TDG}(n), f, t).$$  
+   - **Heuristic Component ($h$):** TDG $h_{TDG}(n)$.  
+   - **Novelty Computation:** novelty element $w(n) = (h_{TDG}(n), f, t).$  
    - **Evaluation Function:** $f(n) = (w(n), h_{TDG}(n))$.  
-   - **Remarks:** Determines the effect of incorporating novelty on the TDG-satis heuristic performance.
+   - **Remarks:** Assesses if adding novelty improves performance over the baseline.
 
 7. **Novelty-bid-tdg-f-t:**  
-   - **Heuristic Component ($h$):** Integrates bidirectional landmarks with TDG-satis, denoted as $h_{bidTDG}(n)$.  
-   - **Novelty Computation:** Computes the novelty element as  
-     $$w(n) = (h_{bidTDG}(n), f, t).$$  
-   - **Evaluation Function:** $f(n) = (w(n), h_{bidTDG}(n))$.  
-   - **Remarks:** Assesses whether including bidirectional landmarks within the novelty framework further improves planner performance.
+   - **Heuristic Component ($h$):** Bidirectional landmarks with TDG-satis $(h_{bid}(n), h_{TDG}(n))$.  
+   - **Novelty Computation:** novelty element $w(n) = (h_{bidTDG}(n), f, t)$  
+   - **Evaluation Function:** $f(n) = (w(n), h_{bid}(n), h_{TDG}(n))$.  
+   - **Remarks:** Assesses if bidirectiona lms  performance over (5).
 
 8. **Novelty-tdg-bid-f-t:**  
-   - **Heuristic Component ($h$):** Uses TDG-satis and bidirectional landmarks in an alternative ordering, denoted as $h_{TDGbid}(n)$.  
-   - **Novelty Computation:** Computes the novelty element as  
-     $$w(n) = (h_{TDGbid}(n), f, t).$$  
-   - **Evaluation Function:** $f(n) = (w(n), h_{TDGbid}(n))$.  
-   - **Remarks:** Compares the impact of different orderings of the heuristic components on the novelty measure and overall search behavior.
+   - **Heuristic Component ($h$):** Uses TDG-satis and bidirectional landmarks $(h_{TDG}(n), h_{bid}(n))$.
+   - **Novelty Computation:** novelty element $w(n) = (h_{TDG}(n), h_{bid}(n), f, t)$  
+   - **Evaluation Function:** $f(n) = (w(n), h_{TDG}(n), h_{bid}(n))$.  
+   - **Remarks:** Compares the impact of using a different ordering of heuristics.
 
 9. **Novelty-lmonly_bu-tdg-f-t:**  
-   - **Heuristic Component ($h$):** Primarily based on the landmark count from a bottom-up approach, i.e., $h_{lm}(n)$.  
-   - **Tie-breaking:** Utilizes TDG-satis, denoted as $h_{TDG}(n)$, as a secondary criterion to break ties.  
-   - **Novelty Computation:** Computes the novelty element as  
-     $$w(n) = (h_{lm}(n), f, t),$$  
-     with the TDG-satis value influencing the evaluation only when novelty measures are equal.  
-   - **Evaluation Function:** $f(n) = (w(n), h_{lm}(n))$, where $h_{TDG}(n)$ acts as the tie-breaker.  
-   - **Remarks:** Investigates if reducing the number of potential novelty tuples by using a single primary heuristic (landmark count) with TDG-satis as tie-breaker yields better planning outcomes.
+   - **Heuristic Component ($h$):** Uses landmark count from a bottom-up approach and TDG.  
+   - **Novelty Computation:** novelty element $w(n) = (h_{lm}(n), f, t).  
+   - **Evaluation Function:** $f(n) = (w(n), h_{lm}(n), h_{TDG}(n))$
+   - **Remarks:** Investigates if reducing the number of potential novelty tuples by using a single heuristic (landmark count) with TDG-satis as tie-breaker yields better planning outcomes.
 
-**Data Files:**
-- [csv file1 here](Pytrich/Experiments/outputs/csv-files/novelty/novelty-experiments.csv)
-- [csv file2 here](PytrichExperiments/outputs/csv-files/novelty/novelty-experiments-stats.csv)
+### Results
 
+### Key Domain Observations
 
+Below are a few highlighted observations comparing the combined baseline **lmcount-tdg** with the novelty configuration **Novelty-lm-tdg-f-t**. 
+
+| Domain                | Baseline (lmcount-tdg)    | Novelty-lm-tdg-f-t     | Key Observation            |
+|-----------------------|-------------|--------------------|-----------------------------------|
+| **Blocksworld-GTOHP** | 27; 340.25(i); 1,636(i) | 26; 337.17(i);  1,406(i) |  novelty reduces solution size and node count. Also there are 24 problems were solved by both, instead of 26.|
+| **Satellite-GTOHP**   | 12; 29.20 (i); 496.20(i) | 5; 28.60 (i); 523.20 (i)| novelty bad |
+| **Transport**         | 18; 25.33(i); 116.33(i) | 3; 28.00 (i); 171.67 (i)| novelty bad |
+| **Depots**            | 24; 87.54(i); 6741.88(i) | 25; 87.54 (i); 1219.54 (i)| novelty good  |
+| **Multiarm-Blocksworld** | 15; 99.77(i); 2014656.38 (i)| 13; 98.69 (i); 1110331.00 (i)| novelty had a lower coverage, but it had a subtantial decrease in nodes expanded|
+| **Monroe-Partially**  | 5; 9.40(i); 7482.80(i) | 5; 35.32 (i); 18268.80 (i)| same coverage but more expanded nodes and larger solution  |
+| **Monroe-Fully**  | 12; 21(i); 14824.83(i) | 12; 21.5 (i); 2910.33 (i)| novelty ok reduced expanded nodes  |
+| **Factories-simple** | 13; 532.75(i); 47540.25(i) | 8; 543 (i); 427762.12 (i)| novelty bad |
+
+*Note: values are <coverage, avg solution size, avg expanded nodes> (i) values means problems intersection statistics*
 
 ---
 
